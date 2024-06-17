@@ -1,4 +1,4 @@
-# General
+## General
 AzusaCoordinates is a Pocketmine plug-in that works to make leaves and fields indestructible.
 
 ## Features
