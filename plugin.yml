@@ -1,6 +1,16 @@
 name: AzusaCoordinates
-version: 1.0.0
+version: 1.0.1
 api: [5.0.0]
 main: KumaDev\Coordinates\Main
 author: KumaDeveloper
 description: Plugin to display the current coordinates of the player and the last coordinates of the player when it died
+commands:
+  coordinates:
+    description: Toggle player coordinates
+    usage: "/coordinates [on|off]"
+    permission: azusacoordinates.command
+
+permissions:
+  azusacoordinates.command:
+    default: op
+    description: Allows the use of the /coordinates command
