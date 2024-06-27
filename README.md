@@ -6,7 +6,12 @@ AzusaCoordinates is a Pocketmine plug-in that works to make leaves and fields in
 - Display the coordinates of the player when dead
 - Custom message
 - Added command feature /coordinates [on/off]
-  
+
+## Command
+Commands | Default | Permission
+--- | --- | ---
+`/coordinates` | Op | azusacoordinates.command
+
 ## Configuration
 ```yaml
 # AzusaCoordinates Configuration
