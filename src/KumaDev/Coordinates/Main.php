@@ -12,7 +12,6 @@ use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\utils\Config;
-use pocketmine\math\Vector3;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 
@@ -78,12 +77,12 @@ class Main extends PluginBase implements Listener {
         $player = $event->getPlayer();
         if (in_array($player->getName(), $this->playersWithCoordinates, true)) {
             $this->enableCoordinates($player);
-        }
-        if ($this->config->get("show_death_coordinates", true) && isset($this->lastDeathCoordinates[$player->getName()])) {
-            $lastCoordinates = $this->lastDeathCoordinates[$player->getName()];
-            $lastDeathWorldName = $this->lastDeathWorldNames[$player->getName()];
-            $message = $this->config->get("last_death_message", "Last Coordinates When You Died: [%s] [%d, %d, %d]");
-            $player->sendMessage(sprintf($message, $lastDeathWorldName, $lastCoordinates->getX(), $lastCoordinates->getY(), $lastCoordinates->getZ()));
+            if ($this->config->get("show_death_coordinates", true) && isset($this->lastDeathCoordinates[$player->getName()])) {
+                $lastCoordinates = $this->lastDeathCoordinates[$player->getName()];
+                $lastDeathWorldName = $this->lastDeathWorldNames[$player->getName()];
+                $message = $this->config->get("last_death_message", "Last Coordinates When You Died: [%s] [%d, %d, %d]");
+                $player->sendMessage(sprintf($message, $lastDeathWorldName, $lastCoordinates->getX(), $lastCoordinates->getY(), $lastCoordinates->getZ()));
+            }
         }
     }
 
@@ -94,13 +93,16 @@ class Main extends PluginBase implements Listener {
         $this->playersWithCoordinates[] = $player->getName();
     }
 
-    private function disableCoordinates(Player $player): void {
-        $pk = new GameRulesChangedPacket();
-        $pk->gameRules = ["showcoordinates" => new BoolGameRule(false, false)];
-        $player->getNetworkSession()->sendDataPacket($pk);
-        $key = array_search($player->getName(), $this->playersWithCoordinates, true);
-        if ($key !== false) {
-            unset($this->playersWithCoordinates[$key]);
+    private function disableCoordinates(CommandSender $sender): void {
+        if ($sender instanceof Player) {
+            $player = $sender;
+            $pk = new GameRulesChangedPacket();
+            $pk->gameRules = ["showcoordinates" => new BoolGameRule(false, false)];
+            $player->getNetworkSession()->sendDataPacket($pk);
+            $key = array_search($player->getName(), $this->playersWithCoordinates, true);
+            if ($key !== false) {
+                unset($this->playersWithCoordinates[$key]);
+            }
         }
     }
 }
